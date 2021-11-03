@@ -2,12 +2,14 @@ package com.vise.baseble;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothManager;
+import android.bluetooth.le.BluetoothLeScanner;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
 
 import com.vise.baseble.callback.IConnectCallback;
+import com.vise.baseble.callback.scan.BleScanCallback;
 import com.vise.baseble.callback.scan.IScanCallback;
 import com.vise.baseble.callback.scan.ScanCallback;
 import com.vise.baseble.callback.scan.SingleFilterScanCallback;
@@ -87,6 +89,30 @@ public class ViseBle {
             throw new IllegalArgumentException("this ScanCallback is Null!");
         }
         scanCallback.setScan(true).scan();
+    }
+
+    /**
+     * 开始扫描
+     *
+     * @param scanCallback 自定义回调
+     */
+    public void startScan(BleScanCallback scanCallback) {
+        if (scanCallback == null) {
+            throw new IllegalArgumentException("this ScanCallback is Null!");
+        }
+        scanCallback.setScan(true).scan();
+    }
+
+    /**
+     * 停止扫描
+     *
+     * @param scanCallback 自定义回调
+     */
+    public void stopScan(BleScanCallback scanCallback) {
+        if (scanCallback == null) {
+            throw new IllegalArgumentException("this ScanCallback is Null!");
+        }
+        scanCallback.setScan(false).removeHandlerMsg().scan();
     }
 
     /**
@@ -296,6 +322,14 @@ public class ViseBle {
      */
     public BluetoothAdapter getBluetoothAdapter() {
         return bluetoothAdapter;
+    }
+
+    public BluetoothLeScanner getScanner() {
+        if (bluetoothAdapter != null && bluetoothAdapter.getBluetoothLeScanner() != null) {
+            return bluetoothAdapter.getBluetoothLeScanner();
+        }
+
+        return null;
     }
 
     /**

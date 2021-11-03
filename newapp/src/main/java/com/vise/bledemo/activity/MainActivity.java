@@ -2,10 +2,13 @@ package com.vise.bledemo.activity;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
@@ -75,6 +78,16 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                LocationManager locationManager = (LocationManager) MainActivity.this.getSystemService(Context.LOCATION_SERVICE);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) { // Android10以上才要进行判断
+                    // 判断GPS模块是否开启，如果没有则跳转至设置开启界面，设置完毕后返回到当前页面
+                    if (!locationManager.isProviderEnabled(android.location.LocationManager.GPS_PROVIDER)) {
+                        // 转到手机设置界面，用户设置GPS
+                        Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                        startActivityForResult(intent, 777); // 设置完成后返回到原来的界面
+                        return;
+                    }
+                }
                 Intent intent = new Intent(MainActivity.this, DeviceScanActivity.class);
                 startActivity(intent);
             }
@@ -167,9 +180,10 @@ public class MainActivity extends AppCompatActivity {
                 statusTv.setText(getString(R.string.on));
                 enableBluetooth();
             }
-        } else if (resultCode == RESULT_CANCELED) {
-            finish();
         }
+//        else if (resultCode == RESULT_CANCELED) {
+//            finish();
+//        }
         super.onActivityResult(requestCode, resultCode, data);
     }
 
@@ -195,7 +209,7 @@ public class MainActivity extends AppCompatActivity {
                     public void onRequestNoAsk(String permissionName) {
                         finish();
                     }
-                }, Manifest.permission.ACCESS_COARSE_LOCATION);
+                }, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION);
             } else {
                 enableBluetooth();
             }

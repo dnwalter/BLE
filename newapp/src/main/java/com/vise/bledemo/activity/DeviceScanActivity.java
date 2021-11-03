@@ -12,6 +12,8 @@ import android.widget.TextView;
 
 import com.vise.baseble.ViseBle;
 import com.vise.baseble.callback.scan.IScanCallback;
+import com.vise.baseble.callback.scan.KeywordFilterScanCallback;
+import com.vise.baseble.callback.scan.RegularFilterScanCallback;
 import com.vise.baseble.callback.scan.ScanCallback;
 import com.vise.baseble.model.BluetoothLeDevice;
 import com.vise.baseble.model.BluetoothLeDeviceStore;
@@ -39,7 +41,7 @@ public class DeviceScanActivity extends AppCompatActivity {
     /**
      * 扫描回调
      */
-    private ScanCallback periodScanCallback = new ScanCallback(new IScanCallback() {
+    private KeywordFilterScanCallback periodScanCallback = new KeywordFilterScanCallback("TAG", new IScanCallback() {
         @Override
         public void onDeviceFound(final BluetoothLeDevice bluetoothLeDevice) {
             ViseLog.i("Founded Scan Device:" + bluetoothLeDevice);
