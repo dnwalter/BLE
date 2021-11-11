@@ -108,6 +108,23 @@ public class DeviceControlActivity extends AppCompatActivity {
                 showGattServices();
             }
         });
+//        findViewById(R.id.send).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (mInput.getText() == null || mInput.getText().toString() == null) {
+//                    ToastUtil.showToast(DeviceControlActivity.this, "Please input command!");
+//                    return;
+//                }
+//                if (!isHexData(mInput.getText().toString())) {
+//                    ToastUtil.showToast(DeviceControlActivity.this, "Please input hex data command!");
+//                    return;
+//                }
+//                mSpCache.put(WRITE_DATA_KEY + mDevice.getAddress(), mInput.getText().toString());
+//                BluetoothDeviceManager.getInstance().write(mDevice, HexUtil.decodeHex(mInput.getText().toString().toCharArray()));
+//            }
+//        });
+
+        // todo ousy 数据透传
         findViewById(R.id.send).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -115,10 +132,7 @@ public class DeviceControlActivity extends AppCompatActivity {
                     ToastUtil.showToast(DeviceControlActivity.this, "Please input command!");
                     return;
                 }
-                if (!isHexData(mInput.getText().toString())) {
-                    ToastUtil.showToast(DeviceControlActivity.this, "Please input hex data command!");
-                    return;
-                }
+
                 mSpCache.put(WRITE_DATA_KEY + mDevice.getAddress(), mInput.getText().toString());
                 BluetoothDeviceManager.getInstance().write(mDevice, HexUtil.decodeHex(mInput.getText().toString().toCharArray()));
             }
@@ -343,6 +357,8 @@ public class DeviceControlActivity extends AppCompatActivity {
                     BluetoothDeviceManager.getInstance().bindChannel(mDevice, PropertyType.PROPERTY_READ, service.getUuid(), characteristic.getUuid(), null);
                     BluetoothDeviceManager.getInstance().read(mDevice);
                 }
+
+                // todo ousy?? 必现打断点，才能连上通知的channel，才会进DeviceMirror.enable()方法
                 if ((charaProp & BluetoothGattCharacteristic.PROPERTY_NOTIFY) > 0) {
                     mSpCache.put(NOTIFY_CHARACTERISTIC_UUID_KEY + mDevice.getAddress(), characteristic.getUuid().toString());
                     ((EditText) findViewById(R.id.show_notify_characteristic)).setText(characteristic.getUuid().toString());

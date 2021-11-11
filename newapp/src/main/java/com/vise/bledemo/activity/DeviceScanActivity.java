@@ -41,7 +41,7 @@ public class DeviceScanActivity extends AppCompatActivity {
     /**
      * 扫描回调
      */
-    private KeywordFilterScanCallback periodScanCallback = new KeywordFilterScanCallback("TAG", new IScanCallback() {
+    private KeywordFilterScanCallback periodScanCallback = new KeywordFilterScanCallback("HL", new IScanCallback() {
         @Override
         public void onDeviceFound(final BluetoothLeDevice bluetoothLeDevice) {
             ViseLog.i("Founded Scan Device:" + bluetoothLeDevice);

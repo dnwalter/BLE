@@ -139,7 +139,7 @@ public class DeviceMirror {
             if (handler != null) {
                 handler.removeMessages(MSG_CONNECT_TIMEOUT);
             }
-            if (status == 0) {
+            if (status == BluetoothGatt.GATT_SUCCESS) {
                 ViseLog.i("onServicesDiscovered connectSuccess.");
                 bluetoothGatt = gatt;
                 connectState = ConnectState.CONNECT_SUCCESS;
@@ -850,7 +850,8 @@ public class DeviceMirror {
                 bluetoothGattInfoValue.getDescriptor().setValue(data);
                 success = bluetoothGatt.writeDescriptor(bluetoothGattInfoValue.getDescriptor());
             } else if (bluetoothGatt != null && bluetoothGattInfoValue.getCharacteristic() != null && bluetoothGattInfoValue.getDescriptor() == null) {
-                bluetoothGattInfoValue.getCharacteristic().setValue(data);
+                bluetoothGattInfoValue.getCharacteristic().setValue("ohyeah");
+//                bluetoothGattInfoValue.getCharacteristic().setValue(data); // todo ousy
                 success = bluetoothGatt.writeCharacteristic(bluetoothGattInfoValue.getCharacteristic());
             }
         }

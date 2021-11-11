@@ -1,7 +1,5 @@
 package com.vise.baseble.callback.scan;
 
-import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
 import android.bluetooth.le.ScanCallback;
 import android.bluetooth.le.ScanResult;
 import android.os.Handler;
@@ -11,8 +9,6 @@ import com.vise.baseble.ViseBle;
 import com.vise.baseble.common.BleConfig;
 import com.vise.baseble.model.BluetoothLeDevice;
 import com.vise.baseble.model.BluetoothLeDeviceStore;
-
-import java.util.List;
 
 /**
  * @Description: 扫描设备回调
