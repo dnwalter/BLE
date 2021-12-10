@@ -16,6 +16,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
 import android.text.util.Linkify;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -193,10 +194,11 @@ public class MainActivity extends AppCompatActivity {
     private void checkBluetoothPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             //校验是否已具有模糊定位权限
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 PermissionManager.instance().with(this).request(new OnPermissionCallback() {
                     @Override
                     public void onRequestAllow(String permissionName) {
+                        Log.e("test", "aaaaa");
                         enableBluetooth();
                     }
 
@@ -211,6 +213,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION);
             } else {
+                Log.e("test", "bbbbb");
                 enableBluetooth();
             }
         } else {
