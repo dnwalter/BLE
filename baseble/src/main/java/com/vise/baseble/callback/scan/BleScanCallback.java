@@ -1,7 +1,9 @@
 package com.vise.baseble.callback.scan;
 
 import android.bluetooth.le.ScanCallback;
+import android.bluetooth.le.ScanFilter;
 import android.bluetooth.le.ScanResult;
+import android.bluetooth.le.ScanSettings;
 import android.os.Handler;
 import android.os.Looper;
 
@@ -9,6 +11,9 @@ import com.vise.baseble.ViseBle;
 import com.vise.baseble.common.BleConfig;
 import com.vise.baseble.model.BluetoothLeDevice;
 import com.vise.baseble.model.BluetoothLeDeviceStore;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @Description: 扫描设备回调
@@ -21,6 +26,7 @@ public class BleScanCallback extends ScanCallback implements IScanFilter {
     protected boolean isScanning = false;//是否正在扫描
     protected BluetoothLeDeviceStore bluetoothLeDeviceStore;//用来存储扫描到的设备
     protected IScanCallback scanCallback;//扫描结果回调
+    protected List<ScanFilter> mScanFilters = new ArrayList<>();
 
     public BleScanCallback(IScanCallback scanCallback) {
         this.scanCallback = scanCallback;
@@ -28,6 +34,19 @@ public class BleScanCallback extends ScanCallback implements IScanFilter {
             throw new NullPointerException("this scanCallback is null!");
         }
         bluetoothLeDeviceStore = new BluetoothLeDeviceStore();
+    }
+
+    public void setScanFilters(List<ScanFilter> filters) {
+        mScanFilters = filters;
+    }
+
+    // 根据蓝牙mac地址添加过滤
+    public void setAddressFilter(String address) {
+        ScanFilter addressFilter = new ScanFilter.Builder()
+                .setDeviceAddress(address)
+                .build();
+        mScanFilters.clear();
+        mScanFilters.add(addressFilter);
     }
 
     public BleScanCallback setScan(boolean scan) {
@@ -82,7 +101,11 @@ public class BleScanCallback extends ScanCallback implements IScanFilter {
                         }
                         isScanning = true;
                         if (ViseBle.getInstance().getScanner() != null) {
-                            ViseBle.getInstance().getScanner().startScan(BleScanCallback.this);
+                            if (mScanFilters.size() > 0) {
+                                ViseBle.getInstance().getScanner().startScan(mScanFilters, new ScanSettings.Builder().build(), BleScanCallback.this);
+                            }else {
+                                ViseBle.getInstance().getScanner().startScan(BleScanCallback.this);
+                            }
                         }
                         handler.postDelayed(this,BleConfig.getInstance().getScanRepeatInterval());
                     }
@@ -90,7 +113,11 @@ public class BleScanCallback extends ScanCallback implements IScanFilter {
             }
             isScanning = true;
             if (ViseBle.getInstance().getScanner() != null) {
-                ViseBle.getInstance().getScanner().startScan(BleScanCallback.this);
+                if (mScanFilters.size() > 0) {
+                    ViseBle.getInstance().getScanner().startScan(mScanFilters, new ScanSettings.Builder().build(), BleScanCallback.this);
+                }else {
+                    ViseBle.getInstance().getScanner().startScan(BleScanCallback.this);
+                }
             }
         } else {
             isScanning = false;

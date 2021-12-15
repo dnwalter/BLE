@@ -44,7 +44,7 @@ public class DeviceScanActivity extends AppCompatActivity {
     private KeywordFilterScanCallback periodScanCallback = new KeywordFilterScanCallback("TAG", new IScanCallback() {
         @Override
         public void onDeviceFound(final BluetoothLeDevice bluetoothLeDevice) {
-            ViseLog.i("Founded Scan Device:" + bluetoothLeDevice);
+            ViseLog.i("Founded Scan name:" + bluetoothLeDevice.getName() + ", address:" + bluetoothLeDevice.getAddress());
             bluetoothLeDeviceStore.addDevice(bluetoothLeDevice);
             runOnUiThread(new Runnable() {
                 @Override
@@ -164,6 +164,9 @@ public class DeviceScanActivity extends AppCompatActivity {
         if (adapter != null) {
             adapter.setListAll(new ArrayList<BluetoothLeDevice>());
         }
+
+        // todo ousy 设置address过滤
+//        periodScanCallback.setAddressFilter("FF:FF:FF:00:40:48");
         ViseBle.getInstance().startScan(periodScanCallback);
         invalidateOptionsMenu();
     }

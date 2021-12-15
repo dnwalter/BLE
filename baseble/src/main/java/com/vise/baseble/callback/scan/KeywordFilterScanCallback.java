@@ -18,6 +18,7 @@ public class KeywordFilterScanCallback extends BleScanCallback{
         if (!TextUtils.isEmpty(tempName) && tempName.contains(mKeyword)) {
             tempDevice = bluetoothLeDevice;
         }
+
         return tempDevice;
     }
 }
